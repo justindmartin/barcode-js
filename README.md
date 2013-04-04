@@ -1,4 +1,4 @@
-barcode-js
+Barcode-JS
 ==========
 A JavaScript barcode generator
 
