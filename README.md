@@ -1,12 +1,11 @@
 barcode-js
 ==========
-
 A JavaScript barcode generator
 
 
 ## Code Example
 
-Sample test to see if some dropdown can be opened:
+Usage Example:
 
 ```javascript
 //get HTML DOM object of the barcode holder
