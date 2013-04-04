@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Barcode Example 1</title>
+		<style type="text/css">
+			*{
+				font-family:Arial,sans-serif,helvetica;
+			}
+			#barcode{
+				height:50px;
+				margin:auto;
+			}
+			#barcode-text{
+				text-align:center;
+			}
+		</style>
+		<script type="text/javascript" src="../src/barcode.js"></script>
+		<script type="text/javascript">
+			window.addEventListener("DOMContentLoaded", function(){
+				var barcodeElement = document.getElementById('barcode');
+				var barcodeExample = new barcode(barcodeElement);
+				barcodeExample.build('978-0262018029');
+			}, false);
+		</script>
+	</head>
+	<body>
+		<h1>Barcode Example 1</h1>
+		<div id="barcode"></div>
+		<p id="barcode-text">Decoded Barcode: 978-0262018029</p>
+	</body>
+</html>
