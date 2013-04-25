@@ -15,3 +15,5 @@ var barcodeExample = new barcode(barcodeElement);
 //build a new barcode for 978-0262018029
 barcodeExample.build('978-0262018029');
 ```
+
+*Supports HTML5 Canvas and has a non-canvas fallback*

@@ -45,14 +45,17 @@ barcode.prototype.build = function(text){
     text = '*' + text + '*';
 
     var textLen = text.length;
-    var barcodeWidth = textLen * (7 * this.barcodeThinWidth + 3 * this.barcodeThickWidth) - this.barcodeThinWidth;
-    this.barcodeElement.style.width = barcodeWidth + 'px';
+    this.barcodeWidth = textLen * (7 * this.barcodeThinWidth + 3 * this.barcodeThickWidth) - this.barcodeThinWidth;
+    this.barcodeElement.style.width = this.barcodeWidth + 'px';
     this.barcodeElement.style.height = this.barcodeHeight + 'px';
+
+    this.barcodeElement.innerHTML += '<canvas width="' + this.barcodeWidth + '" height="' + this.barcodeHeight + '" style="width:' + this.barcodeWidth + 'px; height:' + this.barcodeHeight + 'px;"></canvas>';
+    this.canvasContext = this.barcodeElement.getElementsByTagName('canvas')[this.barcodeElement.getElementsByTagName('canvas').length-1].getContext('2d');
 
     var xPos = 0;
     for(var i = 0; i < textLen; i++){
-
         var character = '';
+
         if((character = text[i]) === false){
             character = '-';
         }
@@ -60,19 +63,22 @@ barcode.prototype.build = function(text){
         for(var j = 0; j <= 8; j++){
             var elementWidth = (this.codeMap[character][j] == 1) ? this.barcodeThickWidth : this.barcodeThinWidth;
             if((j + 1) % 2){
-                var newBar = document.createElement('div');
-                newBar.style.position = 'absolute';
-                newBar.style.left = this.barcodeElement.offsetLeft + xPos + 'px';
-                newBar.style.top = this.barcodeElement.offsetTop + 'px';
-                newBar.style.width = elementWidth + 'px';
-                newBar.style.height = this.barcodeHeight + 'px';
-                newBar.style.backgroundColor = '#000';
-                this.barcodeElement.appendChild(newBar);
+                if(!this.canvasContext){
+                    var newBar = document.createElement('div');
+                    newBar.style.position = 'absolute';
+                    newBar.style.left = this.barcodeElement.offsetLeft + xPos + 'px';
+                    newBar.style.top = this.barcodeElement.offsetTop + 'px';
+                    newBar.style.width = elementWidth + 'px';
+                    newBar.style.height = this.barcodeHeight + 'px';
+                    newBar.style.backgroundColor = '#000';
+                    this.barcodeElement.appendChild(newBar);
+                }else{
+                    this.canvasContext.fillStyle = '#000';
+                    this.canvasContext.fillRect(xPos, 0, elementWidth, this.barcodeHeight*3);
+                }
             }
             xPos += elementWidth;
         }
-
         xPos += this.barcodeThinWidth;
-
     }
 };
