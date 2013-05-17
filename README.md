@@ -14,6 +14,8 @@ var barcodeElement = document.getElementById('barcode-example');
 var barcodeExample = new barcode(barcodeElement);
 //build a new barcode for 978-0262018029
 barcodeExample.build('978-0262018029');
+//vertically align a barcode
+barcodeExample.build('978-0262018029','vertical');
 ```
 
 -----------------------------------------------------
