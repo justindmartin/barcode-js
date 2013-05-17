@@ -6,26 +6,29 @@
 			*{
 				font-family:Arial,sans-serif,helvetica;
 			}
-			#barcode{
-				height:50px;
+			.barcode{
 				margin:auto;
 			}
-			#barcode-text{
+			.barcode-text{
 				text-align:center;
 			}
 		</style>
 		<script type="text/javascript" src="../src/barcode.js"></script>
 		<script type="text/javascript">
 			window.addEventListener("DOMContentLoaded", function(){
-				var barcodeElement = document.getElementById('barcode');
-				var barcodeExample = new barcode(barcodeElement);
-				barcodeExample.build('978-0262018029');
+				var barcodeElements = [document.getElementById('barcode-horizontal'), document.getElementById('barcode-vertical')];
+				var barcodeExample = new barcode(barcodeElements[0]);
+				barcodeExample.build('978-0262018029', 'horizontal');
+				barcodeExample = new barcode(barcodeElements[1]);
+				barcodeExample.build('978-0262018029', 'vertical');
 			}, false);
 		</script>
 	</head>
 	<body>
 		<h1>Barcode Example 1</h1>
-		<div id="barcode"></div>
-		<p id="barcode-text">Decoded Barcode: 978-0262018029</p>
+		<div class="barcode" id="barcode-horizontal"></div>
+		<p class="barcode-text">Decoded Barcode: 978-0262018029</p>
+		<div class="barcode" id="barcode-vertical"></div>
+		<p class="barcode-text">Decoded Barcode: 978-0262018029</p>
 	</body>
 </html>

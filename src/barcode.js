@@ -40,19 +40,27 @@ function barcode(barcodeElement){
 * Builds the barcode
 * @param {string} text    Text to be encoded as a barcode
 */
-barcode.prototype.build = function(text){
+barcode.prototype.build = function(text, orientation){
+    (typeof(orientation) === "undefined") ? "horizontal" : orientation.toLowerCase();
     text = text.toUpperCase();
     text = '*' + text + '*';
 
+
     var textLen = text.length;
     this.barcodeWidth = textLen * (7 * this.barcodeThinWidth + 3 * this.barcodeThickWidth) - this.barcodeThinWidth;
+
+    if(orientation == "vertical"){
+        var temp = this.barcodeWidth;
+        this.barcodeWidth = this.barcodeHeight;
+        this.barcodeHeight = temp;
+    }
+
     this.barcodeElement.style.width = this.barcodeWidth + 'px';
     this.barcodeElement.style.height = this.barcodeHeight + 'px';
-
     this.barcodeElement.innerHTML += '<canvas width="' + this.barcodeWidth + '" height="' + this.barcodeHeight + '" style="width:' + this.barcodeWidth + 'px; height:' + this.barcodeHeight + 'px;"></canvas>';
     this.canvasContext = this.barcodeElement.getElementsByTagName('canvas')[this.barcodeElement.getElementsByTagName('canvas').length-1].getContext('2d');
 
-    var xPos = 0;
+    var pos = 0;
     for(var i = 0; i < textLen; i++){
         var character = '';
 
@@ -61,24 +69,35 @@ barcode.prototype.build = function(text){
         }
 
         for(var j = 0; j <= 8; j++){
-            var elementWidth = (this.codeMap[character][j] == 1) ? this.barcodeThickWidth : this.barcodeThinWidth;
+            var barWidth = (this.codeMap[character][j] == 1) ? this.barcodeThickWidth : this.barcodeThinWidth;
             if((j + 1) % 2){
-                if(!this.canvasContext){
+                if(this.canvasContext){ /* If Canvas is supported, use canvas */
+                    this.canvasContext.fillStyle = '#000';
+                    if(orientation == "horizontal"){
+                        this.canvasContext.fillRect(pos, 0, barWidth, this.barcodeHeight*3);
+                    }else{
+                        this.canvasContext.fillRect(0, pos, this.barcodeHeight * 3, barWidth);
+                    }
+                }else{
                     var newBar = document.createElement('div');
                     newBar.style.position = 'absolute';
-                    newBar.style.left = this.barcodeElement.offsetLeft + xPos + 'px';
-                    newBar.style.top = this.barcodeElement.offsetTop + 'px';
-                    newBar.style.width = elementWidth + 'px';
-                    newBar.style.height = this.barcodeHeight + 'px';
+                    if(orientation == "horizontal"){
+                        newBar.style.left = this.barcodeElement.offsetLeft + pos + 'px';
+                        newBar.style.top = this.barcodeElement.offsetTop + 'px';
+                        newBar.style.width = barWidth + 'px';
+                        newBar.style.height = this.barcodeHeight + 'px';
+                    }else{
+                        newBar.style.left = this.barcodeElement.offsetLeft + 'px';
+                        newBar.style.top = this.barcodeElement.offsetTop + pos + 'px';
+                        newBar.style.width = this.barcodeWidth + 'px';
+                        newBar.style.height = barWidth + 'px';
+                    }
                     newBar.style.backgroundColor = '#000';
                     this.barcodeElement.appendChild(newBar);
-                }else{
-                    this.canvasContext.fillStyle = '#000';
-                    this.canvasContext.fillRect(xPos, 0, elementWidth, this.barcodeHeight*3);
                 }
             }
-            xPos += elementWidth;
+            pos += barWidth;
         }
-        xPos += this.barcodeThinWidth;
+        pos += this.barcodeThinWidth;
     }
 };
